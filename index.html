@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module-test</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+        }
+
+        p {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            text-align: center;
+            margin-left: 30px;
+            background-color: black;
+            color: white;
+            font-weight: 500;
+            width: 170px;
+            height: 40px;
+            border: 1px solid black;
+            border-radius: 8px;
+            transition: All 0.2s ease-in-out;
+
+        }
+
+        button:active {
+            transform: scale(0.80);
+            box-shadow: 0px 0px 20px rgb(27, 26, 26), 0px 0px 40px rgb(29, 29, 29), 0px 0px 80px rgb(29, 29, 29);
+            background-color: rgb(29, 28, 28);
+        }
+
+        #span {
+            font-weight: 400;
+        }
+
+        span {
+            font-weight: 400;
+        }
+
+        .container {
+            width: 95%;
+            height: 100%;
+
+            padding: 30px;
+
+            display: none;
+        }
+
+        .con3 {
+            width: 100%;
+            height: 100%;
+            margin-bottom: 20px;
+        }
+
+        .con3 p {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        .con5 {
+            width: 100%;
+            height: 100%;
+
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .con5 img {
+            position: absolute;
+            left: 3px;
+            top: 10px;
+            width: 20px;
+            height: 25px;
+            padding-right: 20px;
+        }
+
+        .con5 input {
+            width: 98%;
+            height: 40px;
+            padding-left: 30px;
+
+        }
+
+        .con1 {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 17vw;
+            margin-bottom: 20px;
+        }
+
+        .con6 {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: auto auto auto;
+            grid-template-rows: auto;
+
+            justify-content: space-between;
+
+
+        }
+
+        @media screen and (max-width: 800px) {
+            .con6 {
+                display: flex;
+                flex-flow: row wrap;
+            }
+        }
+
+        .div {
+            width: auto;
+            height: auto;
+            margin: 30px;
+            padding: 6px;
+            border: 1px solid black;
+            margin-left: 0px;
+
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+    </script>
+    <script>
+
+        $.get("https://ipinfo.io", function (response) {
+            localStorage.setItem("obj", JSON.stringify(response))
+            document.getElementById("span").innerHTML = response.ip;
+        }, "json")
+
+       //<iframe src="https://maps.google.com/maps?q=35.856737, 10.606619&z=15&output=embed" width="360" height="270" frameborder="0" style="border:0"></iframe>  
+    </script>
+</head>
+
+<body>
+    <div id="first">
+        <p>My Public IP ADDRESS: <span id="span"></span></p>
+        <button type="submit" id="submit">Get Data</button>
+    </div>
+    <div class="container">
+        <h3>My Public IP ADDRESS: <span id="span1"></span></h3>
+        <div class="con1">
+            <div>
+                <h3>Lat: <span id="lat"></span></h3>
+                <h3>Long: <span id="long"></span></h3>
+            </div>
+            <div>
+                <h3>City: <span id="city"></span></h3>
+                <h3>Region: <span id="reg"></span></h3>
+            </div>
+            <div>
+                <h3>Organisation: <span id="org"></span></h3>
+                <h3>Hostname: <span id="host"></span></h3>
+            </div>
+        </div>
+        <div class="con3">
+
+        </div>
+        <div class="con4">
+            <h3>Time Zone: <span id="time"></span></h3>
+            <h3>Date And Time: <span id="date"></span></h3>
+            <h3>Pincode: <span id="pincode"></span></h3>
+            <h3>Message: <span id="message"></span></h3>
+        </div>
+        <div class="con5">
+            <img src="./outline_search_black_24dp.png" alt="">
+            <input type="text" placeholder="Filter By Name And Branch Office" onkeyup="search()" id="input">
+        </div>
+        <div class="con6">
+
+        </div>
+    </div>
+    <script>
+
+        var obj = JSON.parse(localStorage.getItem("obj"));
+
+        function showData(arr) {
+            document.querySelector('.con6').innerHTML = "";
+            console.log(arr);
+            arr.map((a) => {
+                document.querySelector('.con6').innerHTML += ` <div class="div">
+        <p>
+Name: <span id="span">${a.Name}</span>
+        </p>
+        <p>
+          BranchType: <span id="span1">${a.BranchType}</span> 
+        </p>
+        <p>
+        DeliveryStatus: <span>${a.DeliveryStatus}</span>   
+        </p>
+        <p>
+            District: <span>${a.District}</span> 
+      
+        </p>
+        <p>
+         Division: <span> ${a.Division}</span>  
+        </p>
+    </div>`
+            })
+
+        }
+
+        function getData() {
+            let ip = obj.ip;
+
+            document.getElementById("first").style.display = "none";
+            document.querySelector(".container").style.display = "block"
+            $.get(`https://ipinfo.io/${ip}/geo`, function (response1) {
+
+                document.getElementById("span1").innerHTML = response1.ip;
+                let str = response1.loc;
+                let arr = str.split(',');
+                document.getElementById('lat').innerHTML = arr[0];
+                document.getElementById('long').innerHTML = arr[1];
+                document.getElementById('city').innerHTML = response1.city;
+                document.getElementById('reg').innerHTML = response1.region;
+                document.getElementById('org').innerHTML = response1.org;
+                document.getElementById('host').innerHTML = response1.readme;
+                document.querySelector('.con3').innerHTML = `<iframe src="https://maps.google.com/maps?q=${arr[0]}, ${arr[1]}&z=15&output=embed" width="100%" height="300" frameborder="0" style="border:0"></iframe>  
+`
+                document.getElementById('time').innerHTML = response1.timezone;
+                let chicago_datetime_str = new Date().toLocaleString({ timeZone: response1.timezone });
+
+
+                document.getElementById('date').innerHTML = chicago_datetime_str;
+
+                document.getElementById('pincode').innerHTML = response1.postal;
+
+            }, "json")
+            $.get(`https://api.postalpincode.in/pincode/${obj.postal}`, function (response2) {
+
+                document.getElementById('message').innerHTML = response2[0].Message;
+                showData(response2[0].PostOffice)
+
+            }, "json")
+
+
+        }
+        function search() {
+            var list = document.querySelector('.con6');
+            var input = document.getElementById('input').value;
+            var fliter = input.toUpperCase();
+            let spanList = list.querySelectorAll(".div");
+            spanList.forEach(Element => {
+                let span = Element.querySelector('#span').textContent;
+                let span1 = Element.querySelector("#span1").textContent;
+                if (span.toUpperCase().includes(fliter) || span1.toUpperCase().includes(fliter)) {
+                    Element.style.display = ""
+                }
+                else {
+                    Element.style.display = "none"
+                }
+            })
+
+
+
+
+        }
+        document.getElementById("submit").addEventListener("click", (e) => {
+            e.preventDefault();
+            getData();
+
+        })
+
+    </script>
+</body>
+
+</html>
